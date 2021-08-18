@@ -1,5 +1,6 @@
 # Charlie
 ![](https://img.shields.io/github/stars/pandao/editor.md.svg) ![](https://img.shields.io/github/forks/pandao/editor.md.svg) ![](https://img.shields.io/github/tag/pandao/editor.md.svg) ![](https://img.shields.io/github/release/pandao/editor.md.svg) ![](https://img.shields.io/github/issues/pandao/editor.md.svg) ![](https://img.shields.io/bower/v/editor.md.svg)
+
 Charlie is an extensible, client-server, multiplayer system that implements the game of 21. It was developed for teaching purposes, specifically, for software design and development. It is named after _Charlie_ which is a winning hand of five cards that does not go over 21, that is, it does not _break_.
 
 The extensible part is the result of Charlie being built on the plug-in design pattern. The big advantage of plugins is that Charlie can be extended without modifying its core functionality. The plugins are defined iterally by Java interfaces.
@@ -109,40 +110,7 @@ I will just point out that if IBot, in its worker thread, invokes hit, Dealer ma
 
 For all practical purposes, B9 and N6 bots are identical from Dealer's point of view. The only difference is seating as I mentioned above. The intent of having these two bots was to also employ different play strategies. For instance, B9 might use the Wizard of Odds 21 cell strategy where N6 might use the 420 cell strategy. BTW, the Dealer does not, at the moment, support splits and that fact cuts down on the number of cells on both cases.
 
-### ILogan
-Unlike IBot, ILogan bots run on the client-side. ILogan plays in place of the human player. As with the other plugins, we declare ILogan the fully qualified concrete class name in the Charlie properties file, charlie.props. The key is charlie.bot.logan.
-
-The ILogan bot has the potential to implement the most sophisticated play and bet strategies to maximize player returns. It might be best, for IGerty, to start with the 420 cell play strategy and stay with a balanced, level-one system like the Hi-Lo or unbalanced, level-one system like Knock Out.
-
-When ILogan is playing, it must behave. Here are some rules:
-
-Do not make plays before or after your turn.
-Send one play at a time and wait for a response from Dealer.
-Send valid plays for a hand id. For instance, do not send a double-down after the first hit request.
-Do not send requests after you stay.
-Wait for Dealer to compute the outcome, even if you know it before hand.
-Don't subvert the system, e.g., look at the hole card before Dealer reveals it.
-Play like a person, namely, add delay to decisions, otherwise, things will happen too fast and we won't be able to see or know what it really did or why.
-Don't place negative bets, it will just confuse Dealer.
-Don't exit, e.g., invoke System.exit.
-Don't try to initiate contact with Dealer directly. Use Courier which has already established the connection to Dealer to send requests.
-IGerty initiates a game by placing a bet. Here are the steps to starting:
-
-Send the clear message to the table.
-Get the wager from the table. If there isn't a wager, then use the money manager, click to create one. (Note: you'll have to get the chips from the money manager and use the chip coordinates to select the amount. The chips are 100, 25, and 5 from left to right on the table.)
-Invoke the Courier to send the bet to Dealer. The returned Hid is the hand id for the hand. Courier is the intermediary on the client between IGerty on the client and RealPlayer which is itself the interface to Dealer on the server.
-Wait for startGame. At this point IGerty can only observe the cards until it is its turn. This is an opportunity for IGerty to count cards here since every card is sent to all players for the respective hand identified by the hand id.
-When IGerty receives play, it must respond with hit, stay, or if its after the initial deal, doubleDown (see below). IGerty sends these requests to Courier who forwards then to RealPlayer who forwards requests to Dealer.
-After IGerty stays, busts, gets a blackjack, or Charlie, it must wait for endGame when the game is over.
-Go to step 1.
-To play a double-down, IGerty does the following:
-
-Invoke dubble on the hand id. This doubles the bet in the hand.
-Invoke dubble on Courier. This send the play to the Dealer.
-Invoke dubble on the table. This doubles the wager on the table.
-Of course, after double-down, IGerty is done for the game and just waits for endGame.
-
-### ISideBetRule and ISideBetView
+### ISideBetRule & ISideBetView
 A side bet is a bet in addition to the the main bet. The side bet usually depends on certain card combinations. Perhaps the most famous side bet is so-called "insurance" which is a bet that the dealer, showing an Ace as a ten in the hole. It pays 2:1 which is even money because you have the main bet and the insurance premium. So if you win the side bet you also loose the main bet. The Basic Strategy does not recommend buying insurance.
 
 The side bets I'm thinking about here are of the non-insurance kind, although you might think of them as a kind of insurance. The Wizard of Odds gives a raft of side bets from which to choose.
@@ -161,3 +129,52 @@ Dealer invokes ISideBetRule when the hand is done and reports the result to IPla
 
 For the side bet the P&L, that is, the direction positive or negative, is already in the side bet. For instance, suppose the side bet is a seven on the first card. The player makes two bets: 10 for the main bet and 5 for the side bet of seven on the first card. The Wizard of Odds says seven on first card pays 3:1. But the player gets a Blackjack. Dealer pays 3:2 on the 10 and sets the bet amount in the hand id to 15. Dealer uses the side rule which finds no seven on first card and the side bet rule sets -5 as the side bet. IPlayer receives the blackjack message and adds 15 minus 5 = 10 to the IPlayer bankroll. The table invokes setHid on ISideBetView to indicate the side bet loss.
 
+### ILogan
+Unlike IBot, ILogan bots run on the client-side. ILogan plays in place of the human player. As with the other plugins, we declare ILogan the fully qualified concrete class name in the Charlie properties file, charlie.props. The key is charlie.bot.logan.
+
+The ILogan bot has the potential to implement the most sophisticated play and bet strategies to maximize player returns. It might be best, for ILogan, to start with the 420 cell play strategy and stay with a balanced, level-one system like the Hi-Lo or unbalanced, level-one system like Knock Out.
+
+When ILogan is playing, it must behave. Here are some rules:
+
+1. Do not make plays before or after your turn.
+
+1. Send one play at a time and wait for a response from Dealer.
+
+1. Send valid plays for a hand id. For instance, do not send a double-down after the first hit request.
+
+1. Do not send requests after you stay.
+
+1. Wait for Dealer to compute the outcome, even if you know it before hand.
+
+1. Don't subvert the system, e.g., look at the hole card before Dealer reveals it.
+
+1. Play like a person, namely, add delay to decisions, otherwise, things will happen too fast and we won't be able to see or know what it really did or why.
+
+1. Don't place negative bets, it will just confuse Dealer.
+
+1. Don't exit, e.g., invoke System.exit.
+
+1. Don't try to initiate contact with Dealer directly. Use Courier which has already established the connection to Dealer to send requests.
+
+ILogan initiates a game by placing a bet. Here are the steps to starting:
+
+1. Send the clear message to the table.
+
+1. Get the wager from the table. If there isn't a wager, then use the money manager, click to create one. (Note: you'll have to get the chips from the money manager and use the chip coordinates to select the amount. The chips are 100, 25, and 5 from left to right on the table.)
+
+1. Invoke the Courier to send the bet to Dealer. The returned Hid is the hand id for the hand. Courier is the intermediary on the client between ILogan on the client and RealPlayer which is itself the interface to Dealer on the server.
+
+1. Wait for startGame. At this point ILogan can only observe the cards until it is its turn. This is an opportunity for ILogan to count cards here since every card is sent to all players for the respective hand identified by the hand id.
+
+1. When ILogan receives play, it must respond with hit, stay, or if its after the initial deal, doubleDown (see below). ILogan sends these requests to Courier who forwards then to RealPlayer who forwards requests to Dealer.
+
+1. After ILogan stays, busts, gets a blackjack, or Charlie, it must wait for endGame when the game is over.
+
+1. Go to step 1.
+
+To play a double-down, ILogan does the following:
+
+* Invoke dubble on the hand id. This doubles the bet in the hand.
+* Invoke dubble on Courier. This send the play to the Dealer.
+* Invoke dubble on the table. This doubles the wager on the table.
+* Of course, after double-down, ILogan is done for the game and just waits for end of the game.
