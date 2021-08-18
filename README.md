@@ -1,4 +1,5 @@
 # Charlie
+![](https://img.shields.io/github/stars/pandao/editor.md.svg) ![](https://img.shields.io/github/forks/pandao/editor.md.svg) ![](https://img.shields.io/github/tag/pandao/editor.md.svg) ![](https://img.shields.io/github/release/pandao/editor.md.svg) ![](https://img.shields.io/github/issues/pandao/editor.md.svg) ![](https://img.shields.io/bower/v/editor.md.svg)
 Charlie is an extensible, client-server, multiplayer system that implements the game of 21. It was developed for teaching purposes, specifically, for software design and development. It is named after _Charlie_ which is a winning hand of five cards that does not go over 21, that is, it does not _break_.
 
 The extensible part is the result of Charlie being built on the plug-in design pattern. The big advantage of plugins is that Charlie can be extended without modifying its core functionality. The plugins are defined iterally by Java interfaces.
@@ -71,6 +72,20 @@ cards.add(card)
 Card has various methods to inquire about itself, like its value, whether it is a face card (J, K, Q), an Ace, etc.
 
 ACard is the "animated" analog of Card. It is a subclass of Sprite. ACard objects move around the table and have front and back faces. They are in many way more sophisticated than a Card. The key things to know about ACard are ACard constructs itself from a Card, has a home position on the table, and a current position on the table. ACard relentlessly seeks its home from its current position by following a Euclidean straight line. This what gives the impression of "card motion" on the table.
+
+### IAdvisor
+This plugin monitors the player and when a play discrepancy is detected, it issues a warning.
+For instance, suppose we have Ace vs. 10+6. The Basic Strategy says hit. However, if the player presses stay, IAdvisor offers advice to hit. However, IAdvisor only needs to give the advice. IAdvisor does not have to deal with the user interface or how to render the advice. That's the job of Charlie.
+The properties files, charlie.props, as with the other plugins declares the implementation of IAdvisor with the charlie.advisor property. Again, you must specify the fully qualified concrete class name.
+IAdvisor receives the player's hand and the dealer's up-card. IAdvisor has to analyze these and return a response that are in the Play enum:
+
+HIT
+STAY
+DOUBLE_DOWN
+SPLIT
+NONE
+
+If IAdvisor cannot be loaded for some reason, the default is no advice.
 
 ### IBot
 You specify Huey and/or Dewey bots in the charlie.props file with the keys charlie.bot.huey and charlie.bot.dewey respectively. The key must declare the fully qualified concrete class names.
@@ -146,17 +161,3 @@ Dealer invokes ISideBetRule when the hand is done and reports the result to IPla
 
 For the side bet the P&L, that is, the direction positive or negative, is already in the side bet. For instance, suppose the side bet is a seven on the first card. The player makes two bets: 10 for the main bet and 5 for the side bet of seven on the first card. The Wizard of Odds says seven on first card pays 3:1. But the player gets a Blackjack. Dealer pays 3:2 on the 10 and sets the bet amount in the hand id to 15. Dealer uses the side rule which finds no seven on first card and the side bet rule sets -5 as the side bet. IPlayer receives the blackjack message and adds 15 minus 5 = 10 to the IPlayer bankroll. The table invokes setHid on ISideBetView to indicate the side bet loss.
 
-### IAdvisor
-This plugin monitors the player and when a play discrepancy is detected, it issues a warning. For instance, suppose we have Ace vs. 10+6. The Basic Strategy says hit. However, if the player presses stay, IAdvisor offers advice to hit. However, IAdvisor only needs to give the advice. IAdvisor does not have to deal with the user interface or how to render the advice. That's the job of Charlie.
-
-The properties files, charlie.props, as with the other plugins declares the implementation of IAdvisor with the charlie.advisor property. Again, you must specify the fully qualified concrete class name.
-
-IAdvisor receives the player's hand and the dealer's up-card. IAdvisor has to analyze these and return a response that are in the Play enum:
-
-HIT
-STAY
-DOUBLE_DOWN
-SPLIT
-NONE
-
-If IAdvisor cannot be loaded for some reason, the default is no advice.
