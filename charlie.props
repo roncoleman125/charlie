@@ -1,0 +1,7 @@
+charlie.server.login 127.0.0.1:9001
+charlie.server.house 127.0.0.1:1235
+charlie.server.realplayer 127.0.0.1:8501
+charlie.client.courier -1:8001
+#charlie.sounds off
+charlie.debug false
+charlie.shoe charlie.card.Shoe01
