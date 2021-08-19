@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.mycompany</groupId>
-    <artifactId>charlie2M</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <groupId>org.charlie</groupId>
+    <artifactId>charlie-blackjack</artifactId>
+    <version>3.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -16,8 +16,8 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.32</version>
-            <scope>test</scope>
         </dependency>
+        
         <!-- https://mvnrepository.com/artifact/com.github.stephenc.jcip/jcip-annotations -->
         <dependency>
             <groupId>com.github.stephenc.jcip</groupId>
@@ -31,6 +31,7 @@
             <artifactId>netty</artifactId>
             <version>3.2.4.Final</version>
         </dependency>
+        
         <!-- https://mvnrepository.com/artifact/log4j/log4j -->
         <dependency>
             <groupId>log4j</groupId>
@@ -44,6 +45,7 @@
             <artifactId>commons-lang</artifactId>
             <version>2.4</version>
         </dependency>
+        
         <!-- https://mvnrepository.com/artifact/org.swinglabs/swing-layout -->
         <dependency>
             <groupId>org.swinglabs</groupId>
