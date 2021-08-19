@@ -38,11 +38,7 @@ import org.apache.log4j.Logger;
  * @author Ron Coleman
  */
 public class GameServer {
-    static {
-        // For properties see http://www.slf4j.org/api/org/slf4j/impl/SimpleLogger.html
-        System.getProperties().setProperty("LOGFILE","log-server.out");
-    }
-    protected static  Logger LOG = Logger.getLogger(GameServer.class);
+    protected static  Logger LOG = null; 
     protected final static String HOUSE_ACTOR = "HOUSE";
     protected final static Random ran = new Random(0);
     protected final static Integer TOPOLOGY_PORT = 1234;
@@ -59,6 +55,13 @@ public class GameServer {
     
     protected void go() {
         try {
+            // Override default log file name in log4j.properties.
+            System.getProperties().setProperty("LOGFILE","log-server.out");
+            
+            // Launch the logger which causes log4j.properties to be read.
+            LOG = Logger.getLogger(GameServer.class);
+
+            // Logging in earnest can now start.
             LOG.info("game server started");
             
             // Start the actor server

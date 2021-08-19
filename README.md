@@ -1,24 +1,46 @@
 # Charlie
 ![](https://img.shields.io/github/stars/pandao/editor.md.svg) ![](https://img.shields.io/github/forks/pandao/editor.md.svg) ![](https://img.shields.io/github/tag/pandao/editor.md.svg) ![](https://img.shields.io/github/release/pandao/editor.md.svg) ![](https://img.shields.io/github/issues/pandao/editor.md.svg) ![](https://img.shields.io/bower/v/editor.md.svg)
 
-Charlie is an extensible, client-server, multiplayer system that implements the game of 21. It was developed for teaching purposes, specifically, for software design and development. It is named after _Charlie_ which is a winning hand of five cards that does not go over 21, that is, it does not _break_.
+Charlie is an extensible, client-server, Java-based application of _21_ a.k.a. _Blackjack_.
+It is named after _Charlie_, the winning hand of five cards that does not go over 21, that is, it does not _break_.
+It was developed specifically for teaching for software design and development best practices.
 
-The extensible part is the result of Charlie being built on the plug-in design pattern. The big advantage of plugins is that Charlie can be extended without modifying its core functionality. The plugins are defined iterally by Java interfaces.
+Charlie is extensible in the sense that it is based on the plug-in design pattern.
+The big advantage of plugins is that Charlie can be extended without modifying its core functionality.
 
 ## Why Blackjack?
-Games are powerful tools in their own right for teaching. Blackjack, in particular, is an example of an excellent game design, that is, it is easy to play yet difficult to master.
+Games are very useful tools in their own right for teaching.
+Blackjack, in particular, is an example of an excellent turn-based game design.
+That is, it is easy to play yet difficult to master.
 
-Yet Blackjack has the potential to teach many things, including but not limited to game theory, probability and statistical theory, investment strategies, and in the case of Charlie, concurrency, threads, synchronization, Artificial Intelligence, real-time computing, animation, etc. The plain truth is Blackjack is also fun and may prove useful if you're ever stuck in Las Vegas, Atlantic City, Foxwoods, or wherever your travels may take you.
+Blackjack has the potential to teach a number of things. 
+Consider among them game theory, probability and statistical theory, and how to make calculated bets
+or financial investments.
+In the case of Charlie and Java, concurrency, threads, synchronization, Artificial Intelligence,
+real-time computing, animation, etc.
+Blackjack is also fun and may prove useful if you're ever have to gamble your 
+way out of Las Vegas, Atlantic City, Foxwoods, or wherever your travels may take you.
 
-This document does not teach Blackjack. There's tons of information in books and on the Internet for that which I will reference. My primary focus is to explore how to extend Charlie through its plugin system.
+This document does not teach Blackjack. 
+here's tons of information in books and on the Internet for that which I will reference. 
+The primary focus here is to explore how to work with Charlie through its plugin system.
 
 ## A brief history of Blackjack
-The roots of Blackjack roots go back to Don Quixote and Seville and the 17th century. However, serious study of Blackjack began in the 1950s with long-running computer simulations at IBM to discover what would become known as the Basic Strategy, which gives the rules of "correct" play. Issues of how to bet are not covered by the Basic Strategy but card counting. Kelly's criterion, was formulated in the 1950s for investing and can also be applied, in addition to card counting, as an optimal betting strategy. By the 1960s, MIT professor, E.O. Thorpe, published Beat the Dealer, which for a while caused casinos to change the Blackjack game design to counteract the Basic Strategy. However, these tactics backfired as the countermeasures slowed the game which turned away customers. It forced casinos to go back to the simpler "21" rules and look for other means to thwart player the Basic Strategy and card counting.
+The roots of Blackjack roots go back to Don Quixote and Seville and he 17th century.
+However, serious study of Blackjack began in the 1950s with long-running computer 
+simulations at IBM to discover what would become known as the _Basic Strategy_.
+It gives the rules of how to play Blackjack "correctly."
 
-Peter Griffin published The Theory of Blackjack in the late 1990s. It laid out what some might regard as the definitive mathematical treatment of Blackjack from the player's perspective. In 2003, Ben Mezrich published Bringing Down the House, which detailed the Las Vegas exploits of students and their MIT professor. The story was dramatized by the popular 2008 film, _21_.
+Peter Griffin published _The Theory of Blackjack_ in the late 1990s.
+It laid out what some might regard as the definitive mathematical treatment of Blackjack
+from the player's perspective.
+In 2003, Ben Mezrich published _Bringing Down the House_, which detailed the Las Vegas
+exploits of students and their MIT professor.
+The story was dramatized by the film, _21_ (2008).
 
 ## Basic ideas
-Charlie is uses a client-server architecture organized around the model view controller design pattern. In this pattern the dealer behaves like a controller, the client side like a view and the house like the model. After a "real" player logs in and establishes a connection, an instance of House constructs an instance of Dealer for the player. The player is bound to this Dealer until the player logs out.
+Charlie is uses a client-server architecture organized around the model view controller design pattern.
+In this pattern the dealer behaves like a controller, the client side like a view and the house like the model. After a "real" player logs in and establishes a connection, an instance of House constructs an instance of Dealer for the player. The player is bound to this Dealer until the player logs out.
 
 ## Bots: Huey & Dewey
 Charlie is multi-player. However, players do not typically play one another. Instead, depending on the plugin configuration, Dealer may allocate up to two bots, Huey and Dewey, that simulate real players. If no bots have been configured, the game is "heads up," that is, the player against Dealer. Yet Charlie supports multiple dealers concurrently which is the multi-player basis.

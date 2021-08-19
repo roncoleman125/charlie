@@ -57,10 +57,7 @@ import java.lang.reflect.InvocationTargetException;
  * @author Ron Coleman
  */
 public class GameFrame extends javax.swing.JFrame {
-    static {
-        System.getProperties().setProperty("LOGFILE","log-client.out");
-    }
-    protected final Logger LOG = Logger.getLogger(GameFrame.class);
+    protected static Logger LOG = null;
     protected final Integer MY_PORT = 2345;
     protected Courier courier;
     protected ATable table;
@@ -88,13 +85,13 @@ public class GameFrame extends javax.swing.JFrame {
      * Constructor
      */
     public GameFrame() {
-        // Outputs CWD log4j uses where log4j.properties needs to be.
-        // See http://logging.apache.org/log4j/1.2/faq.html#noconfig
-//        System.err.println(Thread
-//                .currentThread()
-//                .getContextClassLoader()
-//                .getResource("."));
+        // Override default log file name in log4j.properties with name for this program.
+        System.getProperties().setProperty("LOGFILE","log-client.out");
         
+        // Launch the logger which causes log4j.properties to be read.        
+        LOG = Logger.getLogger(GameFrame.class);
+
+        // Logging can now start in earnest
         LOG.info("client started");
         
         initComponents();

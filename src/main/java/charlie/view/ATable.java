@@ -71,21 +71,8 @@ public final class ATable extends JPanel implements Runnable, IUi, MouseListener
     protected AHandsManager[] handsManager = {you, dealer, right, left};
     protected TurnIndicator turnSprite = new TurnIndicator();
     protected AHand turn = null;
-    protected HashMap<Seat, AHandsManager> seats = new HashMap<Seat, AHandsManager>() {
-        {
-            put(Seat.YOU, you);
-            put(Seat.RIGHT, right);
-            put(Seat.LEFT, left);
-            put(Seat.DEALER, dealer);
-        }
-    };
-    private final HashMap<Seat, AMoneyManager> monies = new HashMap<Seat, AMoneyManager>() {
-        {
-            put(Seat.YOU, new AMoneyManager());
-            put(Seat.RIGHT, new ABotMoneyManager());
-            put(Seat.LEFT, new ABotMoneyManager());
-        }
-    };
+    protected final HashMap<Seat, AHandsManager> seats = new HashMap<>();
+    protected final HashMap<Seat, AMoneyManager> monies = new HashMap<>();
     
     protected HashMap<Hid, AHand> manos = new HashMap<>();
     protected Thread gameLoop;
@@ -142,6 +129,15 @@ public final class ATable extends JPanel implements Runnable, IUi, MouseListener
 
         this.addNotify();
 
+        seats.put(Seat.YOU, you);
+        seats.put(Seat.RIGHT, right);
+        seats.put(Seat.LEFT, left);
+        seats.put(Seat.DEALER, dealer);
+        
+        monies.put(Seat.YOU, new AMoneyManager());
+        monies.put(Seat.RIGHT, new ABotMoneyManager());
+        monies.put(Seat.LEFT, new ABotMoneyManager());     
+ 
         this.instrImg = new ImageIcon(Constant.DIR_IMGS + "dealer-stands-0.png").getImage();
         this.shoeImg = new ImageIcon(Constant.DIR_IMGS + "shoe-0.png").getImage();
         this.trayImg = new ImageIcon(Constant.DIR_IMGS + "tray-0.png").getImage();
