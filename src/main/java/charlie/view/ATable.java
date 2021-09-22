@@ -105,7 +105,6 @@ public final class ATable extends JPanel implements Runnable, IUi, MouseListener
 
     /**
      * Constructor
-     *
      * @param frame Main game frame
      * @param parent Parent panel containing this one.
      */
@@ -221,7 +220,6 @@ public final class ATable extends JPanel implements Runnable, IUi, MouseListener
 
     /**
      * Paints the display some time after repainted invoked.
-     *
      * @param g Graphics context
      */
     @Override
