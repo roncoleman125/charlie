@@ -30,9 +30,6 @@ import java.util.Random;
  * @author Ron Coleman
  */
 public class Shoe01 extends Shoe {  
-    /**
-     * {@inhertDoc}
-     */
     @Override
     public void init() {
         super.ran = new Random(/*1*/);

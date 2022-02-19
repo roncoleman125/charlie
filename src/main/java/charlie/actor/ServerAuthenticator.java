@@ -51,7 +51,7 @@ public class ServerAuthenticator extends Authenticator {
     
     /**
      * Blocks message from being sent as the server side only receives messages.
-     * @param msg 
+     * @param msg Message
      */
     @Override
     public void send(Message msg) {

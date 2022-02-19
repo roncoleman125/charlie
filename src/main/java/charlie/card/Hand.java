@@ -75,7 +75,7 @@ public class Hand implements Serializable {
     
     /**
      * Tests if the hand is broke.
-     * @return True if hand > 21
+     * @return True if hand gt 21
      */
     public boolean isBroke() {
         if(values[Constant.HAND_LITERAL_VALUE] > 21 && values[Constant.HAND_SOFT_VALUE] > 21)
@@ -217,8 +217,8 @@ public class Hand implements Serializable {
     /**
      * Get hand unified value.
      * Typically this is the soft value with the literal value as the backup.
-     * @param values
-     * @return 
+     * @param values Values for hard and soft aces
+     * @return Unified value
      */
     public static int getValue(int[] values) {
         return values[Constant.HAND_SOFT_VALUE] <= 21 ?

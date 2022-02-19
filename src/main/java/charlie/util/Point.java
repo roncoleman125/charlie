@@ -49,7 +49,7 @@ public class Point {
     
     /**
      * Copy constructor
-     * @param pt 
+     * @param pt Point 
      */
     public Point(Point pt) {
         this.x = pt.x;

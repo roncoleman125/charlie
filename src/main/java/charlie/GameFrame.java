@@ -77,7 +77,6 @@ public class GameFrame extends javax.swing.JFrame {
     /**
      * Is a hand "split-able
      * @author Dan Blossom
-     * @date 10/2017
      */
     protected boolean splittable = false;
 
@@ -754,7 +753,7 @@ public class GameFrame extends javax.swing.JFrame {
 
     /**
      * A helper function to determine if a hand can be split
-     * @param hid
+     * @param hid Hand id
      */
     public void enableSplitButton(Hid hid){
         

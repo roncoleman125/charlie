@@ -33,7 +33,7 @@ import java.awt.Graphics2D;
 public interface ISideBetView {
     /**
      * Sets the money manager.
-     * @param moneyManager 
+     * @param moneyManager Money manager
      */
     public void setMoneyManager(AMoneyManager moneyManager);
     
@@ -46,8 +46,8 @@ public interface ISideBetView {
     
     /**
      * Reports side bet outcome at the end of the game for hand with hand id.
-     * If the side bet amount is &lt;0, the player lost.
-     * If the side bet amount is >&gt;0 the player won.
+     * If the side bet amount is less than 0, the player lost.
+     * If the side bet amount is greater than 0 the player won.
      * If the side bet amount is 0, there was no side bet.
      * @param hid Hand id
      */

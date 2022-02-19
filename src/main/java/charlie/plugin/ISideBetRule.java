@@ -30,7 +30,7 @@ import charlie.card.Hand;
  */
 public interface ISideBetRule {
     /**
-     * Gives the apply amount as <0 (loose), 0 (not play), or >0 (win)
+     * Gives the apply amount as less than 0 (loose), 0 (not play), or greater than  0 (win)
      * @param hand Hand
      * @return Payout
      */

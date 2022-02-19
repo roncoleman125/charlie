@@ -111,7 +111,7 @@ public class AMoneyManager {
     
     /**
      * Gets the wager.
-     * @return 
+     * @return Wager amount
      */
     public Integer getWager() {
         return this.wager.getAmt();

@@ -15,8 +15,8 @@ public class SplitResponse extends Message{
     
     /**
      * Constructor
-     * @param newHid
-     * @param origHid
+     * @param newHid New hid
+     * @param origHid Old hid
      */
     public SplitResponse(Hid newHid, Hid origHid){
         this.newHid = newHid;

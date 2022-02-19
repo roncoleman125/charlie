@@ -109,7 +109,7 @@ public class ChipButton {
     
     /**
      * Gets the button up image.
-     * @return 
+     * @return Button image
      */
     public Image getImage() {
         return up;

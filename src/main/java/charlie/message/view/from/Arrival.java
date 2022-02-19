@@ -39,8 +39,9 @@ public class Arrival extends Message {
      * Constructor
      * @param ticket Ticket
      * @param source Source address
+     * @param port Port number
      */
-    public Arrival(Ticket ticket,InetAddress source,int port) {
+    public Arrival(Ticket ticket, InetAddress source, int port) {
         super(source);
         this.port = port;
         this.ticket = ticket;

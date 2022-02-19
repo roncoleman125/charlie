@@ -33,8 +33,8 @@ public class SplashDialog extends javax.swing.JDialog {
 
     /**
      * Creates new form SplashDialog
-     * @param parent
-     * @param modal
+     * @param parent Parent frame
+     * @param modal Modal flag
      */
     public SplashDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);

@@ -207,7 +207,7 @@ public class AHand {
 
     /**
      * Tests whether the hand is ready, i.e., whether all cards have "landed".
-     * @return 
+     * @return True if hand is "ready"
      */
     public boolean isReady() {
         for(int i=0; i < cards.size(); i++) {
@@ -342,9 +342,9 @@ public class AHand {
     }
     
     /**
-     * Gets the kth card in the hand.
+     * Gets the k-th card in the hand.
      * @param k
-     * @return 
+     * @return k-th card in hand
      */
     public ACard get(Integer k) {
         if(k >= cards.size())
@@ -356,7 +356,7 @@ public class AHand {
     /**
      * Toggles the turn indicator for the hand.
      * If playing is true, the turn indicator is enabled.
-     * @param playing 
+     * @param playing Playing toggle
      */
     public void enablePlaying(boolean playing) {
         this.turnSprite.show(playing);

@@ -149,7 +149,7 @@ public class House extends Actor implements Listener {
     /**
      * Updates the bankroll.
      * @param hid Hand
-     * @param gain P&L
+     * @param gain PL
      * @param player the player
      */
     public void updateBankroll(IPlayer player,Hid hid,Double gain) {      

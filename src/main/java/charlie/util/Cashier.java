@@ -44,7 +44,7 @@ public class Cashier {
     /**
      * Doubles the number of chips.
      * @param chips Chips
-     * @return 
+     * @return Number of chips
      */
     public static List<Chip> dubble(List<Chip> chips) {
         chips.addAll(chips);
