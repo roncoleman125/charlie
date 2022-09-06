@@ -213,15 +213,15 @@ public class Dealer implements Serializable {
     protected Card deal() {
         Card card = shoe.next();
         
-        checkDeck();
+        checkShoe();
         
         return card;
     }
     
     /**
-     * Check deck for re-shuffle.
+     * Check shoe for re-shuffle.
      */
-    protected void checkDeck() {
+    protected void checkShoe() {
         // If shuffle needed and one not already pending
         if(!shufflePending && shoe.shuffleNeeded()) {
             shufflePending = true;
