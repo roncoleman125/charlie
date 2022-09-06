@@ -222,7 +222,7 @@ public class Dealer implements Serializable {
      * Check shoe for re-shuffle.
      */
     protected void checkShoe() {
-        // If shuffle needed and one not already pending
+        // If shuffle needed and shuffle not already pending
         if(!shufflePending && shoe.shuffleNeeded()) {
             shufflePending = true;
             
