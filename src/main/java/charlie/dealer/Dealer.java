@@ -472,9 +472,12 @@ public class Dealer implements Serializable {
         Hand hand = validate(hid);
         
         if(hand == null) {
-            LOG.error("got invalide DOUBLE DOWN player = "+iplayer);
+            LOG.error("null hand double-down player = "+iplayer);
             return;
         }
+
+        if(hand.size() != 2)
+            throw new UnsupportedOperationException("invalid hand size = "+hand.size());
         
         LOG.info("got double down amt = "+hid.getAmt()+" hid = "+hid);
         
