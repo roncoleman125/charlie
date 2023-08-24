@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="charlie.MainForm">
+  <grid id="27dc6" binding="panel1" default-binding="true" layout-manager="BorderLayout" hgap="0" vgap="0">
+    <constraints>
+      <xy x="20" y="20" width="692" height="453"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <grid id="73b65" layout-manager="BorderLayout" hgap="0" vgap="0">
+        <constraints border-constraint="South"/>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <grid id="2095a" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="0">
+            <constraints border-constraint="West"/>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="47a44" class="javax.swing.JCheckBox" binding="soundsCheckBox" default-binding="true">
+                <constraints/>
+                <properties>
+                  <text value="Sounds"/>
+                </properties>
+              </component>
+              <component id="8c869" class="javax.swing.JCheckBox" binding="adviseCheckBox" default-binding="true">
+                <constraints/>
+                <properties>
+                  <text value="Advise"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="ed748" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
+            <constraints border-constraint="Center"/>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="2eea4" class="javax.swing.JButton" binding="splitButton" default-binding="true">
+                <constraints/>
+                <properties>
+                  <text value="Split"/>
+                </properties>
+              </component>
+              <component id="b6f40" class="javax.swing.JButton" binding="hitButton" default-binding="true">
+                <constraints/>
+                <properties>
+                  <text value="Hit"/>
+                </properties>
+              </component>
+              <component id="d4b46" class="javax.swing.JButton" binding="stayButton" default-binding="true">
+                <constraints/>
+                <properties>
+                  <text value="Stay"/>
+                </properties>
+              </component>
+              <component id="5edd0" class="javax.swing.JButton" binding="dealButton" default-binding="true">
+                <constraints/>
+                <properties>
+                  <text value="Deal"/>
+                </properties>
+              </component>
+              <component id="d4923" class="javax.swing.JButton" binding="loginButton" default-binding="true">
+                <constraints/>
+                <properties>
+                  <text value="Login"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+        </children>
+      </grid>
+    </children>
+  </grid>
+</form>

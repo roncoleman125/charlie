@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
+import javax.imageio.ImageIO;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -96,7 +97,7 @@ public class GameFrame extends javax.swing.JFrame {
         initComponents();
 
         init();
-        
+
         LOG.info("init done");
     }
 
@@ -104,23 +105,31 @@ public class GameFrame extends javax.swing.JFrame {
      * Initializes the frame.
      */
     protected final void init() {
-        // Establish the title
+        // Establishes the title.
         this.setTitle("Charlie2");
-        
-        // Get the ATable on to the grame
+
+        // Makes the icon on the title bar and the program tray.
+        try {
+            setIconImage(ImageIO.read(new File("images/ace-card-png-clipart-2772840239.png")));
+        }
+        catch(Exception e) {
+            System.out.println(e);
+        }
+
+        // Get the ATable on to the surface.
         table = new ATable(this, this.surface);
 
         surface.add(table);
 
-        // Position the frame
+        // Positions the frame at the center of the desktop.
         this.setLocationRelativeTo(null);
 
-        // Initially we can't deal or play
+        // Initially we can't deal or play because the server might not be running.
         enableDeal(false);
 
         enablePlay(false);
         
-        // Initialize the sounds
+        // Initializes the sounds as ready to play.
         this.soundsCheckBox.setSelected(true);
         
         this.soundsCheckBox.addItemListener(new ItemListener() {    
