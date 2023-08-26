@@ -111,7 +111,7 @@ public class GameFrame extends javax.swing.JFrame {
         // Makes the icon on the title bar and the program tray.
         try {
             //setIconImage(ImageIO.read(new File("images/ace-card-png-clipart-2772840239.png")));
-            setIconImage(ImageIO.read(new File("images/myace-4.png")));
+            setIconImage(ImageIO.read(new File("images/myace-6.png")));
         }
         catch(Exception e) {
             System.out.println(e);
