@@ -228,7 +228,7 @@ public final class ATable extends JPanel implements Runnable, IUi, MouseListener
 
         Graphics2D g2d = (Graphics2D) g;
 
-        // Render the paraphenelia
+        // Render the paraphernalia
         g2d.drawImage(this.instrImg, 140, 208, this);
         g2d.drawImage(this.shoeImg, 540, 5, this);
         g2d.drawImage(this.trayImg, 430, 5, this);
