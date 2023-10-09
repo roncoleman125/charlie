@@ -57,29 +57,8 @@ import java.lang.reflect.InvocationTargetException;
  * This class implements the main game frame.
  * @author Ron Coleman
  */
-public class GameFrame extends javax.swing.JFrame {
+public class GameFrame extends AbstractGameFrame {
     protected static Logger LOG = null;
-    protected final Integer MY_PORT = 2345;
-    protected Courier courier;
-    protected ATable table;
-    protected boolean connected = false;
-    protected final String COURIER_ACTOR = "COURIER";
-    protected final String SOUND_EFFECTS_PROPERTY = "charlie.sounds.enabled";
-    protected final List<Hid> hids = new ArrayList<>();
-    protected final HashMap<Hid,Hand> hands = new HashMap<>();
-    protected int handIndex = 0;
-    protected boolean trucking = true;
-    protected boolean dubblable;
-    protected IAdvisor advisor;
-    protected Hand dealerHand;
-//    private Properties props;
-    protected boolean manuallyControlled = true;
-    
-    /**
-     * Is a hand "split-able
-     * @author Dan Blossom
-     */
-    protected boolean splittable = false;
 
     /**
      * Constructor
@@ -147,16 +126,16 @@ public class GameFrame extends javax.swing.JFrame {
         // Load the rest of the configuration
         loadConfig();
     }
-    
+
     /**
      * Loads the configuration.
      */
-    protected void loadConfig() {
+    public void loadConfig() {
         try {
             // Get the properties
             Properties props = System.getProperties();
-            props.load(new FileInputStream("charlie.props"));  
-            
+            props.load(new FileInputStream("charlie.props"));
+
             // Disable sounds, if configured as such
             String value = props.getProperty("charlie.sounds");
             if(value != null && value.equals("off")) {
@@ -164,18 +143,18 @@ public class GameFrame extends javax.swing.JFrame {
                 soundsCheckBox.setSelected(false);
                 SoundFactory.enable(false);
             }
-            
+
             // Check for sound files folder
             File f = new File("audio");
             if(!f.exists() || !f.isDirectory()) {
                 JOptionPane.showMessageDialog(this,
                         "Could not find audio files.",
                         "Status",
-                        JOptionPane.ERROR_MESSAGE); 
+                        JOptionPane.ERROR_MESSAGE);
                 System.exit(1);
-            
+
             }
-            
+
             // Load the advisor
             loadAdvisor();
         } catch(IOException e) {
@@ -186,7 +165,7 @@ public class GameFrame extends javax.swing.JFrame {
             System.exit(1);
         }
     }
-    
+
     /**
      * Loads the advisor.
      */
@@ -196,13 +175,13 @@ public class GameFrame extends javax.swing.JFrame {
 
             if (className == null)
                 return;
-             
+
             LOG.info("advisor plugin detected: "+className);
             Class<?> clazz = Class.forName(className);
 
             this.advisor = (IAdvisor) clazz.getDeclaredConstructor().newInstance();
-            
-            LOG.info("loaded advisor successfully");              
+
+            LOG.info("loaded advisor successfully");
         } catch (ClassNotFoundException |
                 InstantiationException |
                 IllegalAccessException |
@@ -213,27 +192,28 @@ public class GameFrame extends javax.swing.JFrame {
             LOG.error(ex.toString());
         }
     }
-    
+
     /**
      * Confirm play with advisor.
      * @param hid Hand id for our hand
      * @param play Play we're making
      * @return True if advising, false otherwise
      */
+    @Override
     protected boolean confirmed(Hid hid,Play play) {
         if(!this.adviseCheckBox.isSelected() || advisor == null || dealerHand.size() < 2)
             return true;
-        
+
         Hand myHand = hands.get(hid);
 
         Play advice = advisor.advise(myHand,dealerHand.getCard(1));
 
         if(advice == Play.NONE)
             return true;
-        
+
         if (this.adviseCheckBox.isSelected() && advice != play) {
             SoundFactory.play(Effect.BAD_PLAY);
-            
+
             Object[] options = {
                 play,
                 "Cancel"};
@@ -253,7 +233,7 @@ public class GameFrame extends javax.swing.JFrame {
                 return false;
             }
         }
-        
+
         return true;
     }
 
@@ -262,67 +242,67 @@ public class GameFrame extends javax.swing.JFrame {
      * @param panel Panel courier perceives.
      * @return True if connected, false if connect attempt fails.
      */
-    private boolean connect(ATable panel) {
-        Ticket ticket = new ClientAuthenticator().send("abc", "def");
-        
-        if(ticket == null)
-            return false;
-        
-        LOG.info("login successful");
-        
-        // Start courier to receive messages from dealer --
-        // NOTE: we must start courier before sending arrival message otherwise
-        // ready message will come before any actor can receive it.
-        courier = new Courier(panel);
-        courier.start();
-        
-        // Let house know we've arrived then wait for READY to begin playing
-        new Arriver(ticket).send(); 
+//    private boolean connect(ATable panel) {
+//        Ticket ticket = new ClientAuthenticator().send("abc", "def");
+//
+//        if(ticket == null)
+//            return false;
+//
+//        LOG.info("login successful");
+//
+//        // Start courier to receive messages from dealer --
+//        // NOTE: we must start courier before sending arrival message otherwise
+//        // ready message will come before any actor can receive it.
+//        courier = new Courier(panel);
+//        courier.start();
+//
+//        // Let house know we've arrived then wait for READY to begin playing
+//        new Arriver(ticket).send();
+//
+//        synchronized (panel) {
+//            try {
+//                panel.wait(5000);
+//
+//                Double bankroll = ticket.getBankroll();
+//
+//                panel.setBankroll(bankroll);
+//
+//                LOG.info("connected to courier with bankroll = " + bankroll);
+//
+//            } catch (InterruptedException ex) {
+//                LOG.info("failed to connect to server: " + ex);
+//
+//                failOver();
+//
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
 
-        synchronized (panel) {
-            try {
-                panel.wait(5000);
-
-                Double bankroll = ticket.getBankroll();
-
-                panel.setBankroll(bankroll);
-
-                LOG.info("connected to courier with bankroll = " + bankroll);
-
-            } catch (InterruptedException ex) {
-                LOG.info("failed to connect to server: " + ex);
-
-                failOver();
-
-                return false;
-            }
-        }
-        return true;
-    }
-    
     /**
      * Receives a card.
      * @param hid Hand id
      * @param card Card
      * @param handValues Hand values for the hand.
      */
-    public void deal(Hid hid, Card card, int[] handValues) {      
+    public void deal(Hid hid, Card card, int[] handValues) {
         Hand hand = hands.get(hid);
-        
+
         if(hand == null) {
             hand = new Hand(hid);
-            
+
             hands.put(hid, hand);
-            
+
             if(hid.getSeat() == Seat.DEALER)
                 this.dealerHand = hand;
         }
-            
+
         hand.hit(card);
-        
+
         // For now, it will enable the split button
         // Only call if it's our hand
-        // Do not like this here 
+        // Do not like this here
         if(hid.getSeat() == Seat.YOU){
             this.enableSplitButton(hid);
         }
@@ -332,6 +312,7 @@ public class GameFrame extends javax.swing.JFrame {
      * Enables dealing in which player can bet but not play (hit, stay, etc.).
      * @param state State
      */
+    @Override
     public void enableDeal(boolean state) {
         this.dealButton.setEnabled(state);
 
@@ -350,13 +331,14 @@ public class GameFrame extends javax.swing.JFrame {
      * Enables play (hit, stay, etc.)
      * @param state State
      */
+    @Override
     public void enablePlay(boolean state) {
         this.hitButton.setEnabled(state && trucking && manuallyControlled);
 
         this.stayButton.setEnabled(state && trucking && manuallyControlled);
 
         this.ddownButton.setEnabled(state && dubblable && trucking && manuallyControlled);
-        
+
         this.splitButton.setEnabled(state && splittable && trucking && manuallyControlled);
     }
 
@@ -391,8 +373,8 @@ public class GameFrame extends javax.swing.JFrame {
         stayButton = new javax.swing.JButton();
         ddownButton = new javax.swing.JButton();
         splitButton = new javax.swing.JButton();
-        adviseCheckBox = new javax.swing.JCheckBox();
-        soundsCheckBox = new javax.swing.JCheckBox();
+        adviseCheckBox = new JCheckBox();
+        soundsCheckBox = new JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -766,66 +748,69 @@ public class GameFrame extends javax.swing.JFrame {
      * @param hid Hand id
      */
     public void enableSplitButton(Hid hid){
-        
+
         if(hid.getSeat() != Seat.YOU){
             this.splittable = false;
             return;
         }
-        
+
         Hand hand = hands.get(hid);
-        
+
         // If the hand is a pair && it hasn't been part of a split
         this.splittable = hand.isPair() && !hid.getSplit();
     }
-    
+
     /**
      * Once ATable receives successful split from dealer
      * This method is called to update GameFrame hand/hids
      * @param newHid the new hid to be added
      * @param origHid the original hid to be edited
      */
+    @Override
     public void split(Hid newHid, Hid origHid){
-        
+
         this.hids.add(newHid);
-        
+
         // Create two hands from cards.
         Hand newHandLeft = new Hand(origHid);
         Hand newHandRight = new Hand(newHid);
-        
+
         // Hit each and with one of the split cards
         Card leftCard = hands.get(origHid).getCard(0);
         Card rightCard = hands.get(origHid).getCard(1);
-        
+
         newHandLeft.hit(leftCard);
         newHandRight.hit(rightCard);
-        
+
         // Replace the original hand with the left
         hands.remove(origHid);
         hands.put(origHid, newHandLeft);
-        
+
         // Add the new hand.
         hands.put(newHid, newHandRight);
     }
-    
+
     /**
      * Increment the hand index.
-     * 
+     *
      * I think a "set" and HID is a better solution than ArrayList
      */
+    @Override
     public void updateHandIndex(){
         if(handIndex < hids.size()){
             handIndex++;
-        }         
+        }
     }
-    
+
     /**
      * Sets the double variable true/false
      * @param state - the state to make 'dubblable'
      */
+    @Override
     public void setdubblable(boolean state){
-       this.dubblable = state; 
+       this.dubblable = state;
     }
-    
+
     /**
      * Main starting point of app.
      * @param args the command line arguments
@@ -858,11 +843,11 @@ public class GameFrame extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton accessButton;
-    private javax.swing.JCheckBox adviseCheckBox;
+    private JCheckBox adviseCheckBox;
     private javax.swing.JButton ddownButton;
     private javax.swing.JButton dealButton;
     private javax.swing.JButton hitButton;
-    private javax.swing.JCheckBox soundsCheckBox;
+    private JCheckBox soundsCheckBox;
     private javax.swing.JButton splitButton;
     private javax.swing.JButton stayButton;
     private javax.swing.JPanel surface;

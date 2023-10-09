@@ -22,6 +22,7 @@
  */
 package charlie.view;
 
+import charlie.AbstractGameFrame;
 import charlie.plugin.IUi;
 import charlie.view.sprite.TurnIndicator;
 import charlie.GameFrame;
@@ -78,7 +79,7 @@ public final class ATable extends JPanel implements Runnable, IUi, MouseListener
     protected Thread gameLoop;
     protected static Color COLOR_FELT = new Color(0, 153, 100);
     protected final int DELAY = 50;
-    protected final GameFrame frame;
+    protected final AbstractGameFrame frame;
     protected boolean bettable = false;
     protected boolean gameOver = true;
     protected boolean shufflePending = false;
@@ -108,7 +109,7 @@ public final class ATable extends JPanel implements Runnable, IUi, MouseListener
      * @param frame Main game frame
      * @param parent Parent panel containing this one.
      */
-    public ATable(GameFrame frame, JPanel parent) {
+    public ATable(AbstractGameFrame frame, JPanel parent) {
         this.frame = frame;
 
         setSize(parent.getWidth(), parent.getHeight());
