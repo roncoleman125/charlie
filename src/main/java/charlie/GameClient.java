@@ -132,6 +132,10 @@ public class GameClient extends AbstractGameFrame {
         // We don't necessarily care for this style of adding action listeners but
         // it's what IntelliJ gave us...
         loginButton.addActionListener(new ActionListener() {
+            /**
+             * Logs in or logs out, depending on the state.
+             * @param e the event to be processed
+             */
             @Override
             public void actionPerformed(ActionEvent e) {
 
@@ -202,6 +206,10 @@ public class GameClient extends AbstractGameFrame {
         });
 
         dealButton.addActionListener(new ActionListener() {
+            /**
+             * Causes a deal from the shoe.
+             * @param e the event to be processed
+             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Clear hands
@@ -211,7 +219,7 @@ public class GameClient extends AbstractGameFrame {
 
                 handIndex = 0;
 
-                setdubblable(true);
+                setDubblable(true);
 
                 new Thread(new Runnable() {
                     @Override
@@ -252,6 +260,10 @@ public class GameClient extends AbstractGameFrame {
         });
 
         stayButton.addActionListener(new ActionListener() {
+            /**
+             * Requests a stay from the dealer.
+             * @param e the event to be processed
+             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 SwingUtilities.invokeLater(new Runnable() {
@@ -259,7 +271,7 @@ public class GameClient extends AbstractGameFrame {
                     public void run() {
                         Hid hid = hids.get(frame.handIndex);
 
-                        if (!confirmed(hid, Play.STAY))
+                        if (!isAdvisingConfirmed(hid, Play.STAY))
                             return;
 
                         // Disable further play since this is a STAY
@@ -272,6 +284,10 @@ public class GameClient extends AbstractGameFrame {
         });
 
         hitButton.addActionListener(new ActionListener() {
+            /**
+             * Requests a hit from the dealer.
+             * @param e the event to be processed
+             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 SwingUtilities.invokeLater(new Runnable() {
@@ -279,13 +295,13 @@ public class GameClient extends AbstractGameFrame {
                     public void run() {
                         Hid hid = hids.get(frame.handIndex);
 
-                        if(!confirmed(hid,Play.HIT))
+                        if(!isAdvisingConfirmed(hid,Play.HIT))
                             return;
 
                         // NOTE: this isables double down on all hids and will have to be
                         // fixed when splitting hids
                         //frame.dubblable = false;
-                        setdubblable(false);
+                        setDubblable(false);
 
                         // Disable play until the card arrives
                         enablePlay(false);
@@ -297,6 +313,10 @@ public class GameClient extends AbstractGameFrame {
         });
 
         splitButton.addActionListener(new ActionListener() {
+            /**
+             * Requests a split from the dealer.
+             * @param e the event to be processed
+             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 SwingUtilities.invokeLater(new Runnable() {
@@ -305,7 +325,7 @@ public class GameClient extends AbstractGameFrame {
                         // get active hand
                         Hid hid = hids.get(frame.handIndex);
 
-                        if (!confirmed(hid, Play.SPLIT))
+                        if (!isAdvisingConfirmed(hid, Play.SPLIT))
                             return;
 
                         SoundFactory.play(Effect.SPLIT);
@@ -321,6 +341,10 @@ public class GameClient extends AbstractGameFrame {
         });
 
         ddownButton.addActionListener(new ActionListener() {
+            /**
+             * Requests a double-down from the dealer.
+             * @param e the event to be processed
+             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 SwingUtilities.invokeLater(new Runnable() {
@@ -328,7 +352,7 @@ public class GameClient extends AbstractGameFrame {
                     public void run() {
                         Hid hid = hids.get(frame.handIndex);
 
-                        if (!confirmed(hid, Play.DOUBLE_DOWN))
+                        if (!isAdvisingConfirmed(hid, Play.DOUBLE_DOWN))
                             return;
 
                         SoundFactory.play(Effect.DOUBLE_DOWN);
@@ -338,7 +362,7 @@ public class GameClient extends AbstractGameFrame {
 
                         // No further dubbling until the next bet made
                         //dubblable = false;
-                        frame.setdubblable(false);
+                        frame.setDubblable(false);
 
                         // Double the bet in the myHand using a copy since this
                         // is a transient bet.
@@ -354,7 +378,7 @@ public class GameClient extends AbstractGameFrame {
             }
         });
 
-        // Load the plugins
+        // Loads the plugins
         loadConfig();
     }
     public static void main(String[] main) {
@@ -371,6 +395,10 @@ public class GameClient extends AbstractGameFrame {
         new GameClient();
     }
 
+    /**
+     * Enables the deal and other buttons.
+     * @param state If true, the appropriate buttons will be enabled.
+     */
     @Override
     public void enableDeal(boolean state) {
         this.dealButton.setEnabled(state);
@@ -386,6 +414,10 @@ public class GameClient extends AbstractGameFrame {
         this.ddownButton.setEnabled(false);
     }
 
+    /**
+     * Enables play.
+     * @param state If true, enables buttons appropriately.
+     */
     @Override
     public void enablePlay(boolean state) {
         this.hitButton.setEnabled(state && trucking && manuallyControlled);
@@ -397,6 +429,11 @@ public class GameClient extends AbstractGameFrame {
         this.splitButton.setEnabled(state && splittable && trucking && manuallyControlled);
     }
 
+    /**
+     * Splits an old hand into a new one.
+     * @param newHid Target hand
+     * @param origHid Source hand
+     */
     @Override
     public void split(Hid newHid, Hid origHid) {
 
@@ -421,6 +458,9 @@ public class GameClient extends AbstractGameFrame {
         hands.put(newHid, newHandRight);
     }
 
+    /**
+     * Updates the hand index.
+     */
     @Override
     public void updateHandIndex() {
         if(handIndex < hids.size()){
@@ -428,11 +468,21 @@ public class GameClient extends AbstractGameFrame {
         }
     }
 
+    /**
+     * Makes double-able possible.
+     * @param state If true, does so
+     */
     @Override
-    public void setdubblable(boolean state) {
+    public void setDubblable(boolean state) {
         this.dubblable = state;
     }
 
+    /**
+     * Deals a card to a hand.
+     * @param hid Hand id
+     * @param card Card going to the hand
+     * @param handValues Hard and soft hand values
+     */
     @Override
     public void deal(Hid hid, Card card, int[] handValues) {
         Hand hand = hands.get(hid);
@@ -455,6 +505,11 @@ public class GameClient extends AbstractGameFrame {
             this.enableSplitButton(hid);
         }
     }
+
+    /**
+     * Enables a split for a hand.
+     * @param hid Hand id of the hand.
+     */
     public void enableSplitButton(Hid hid){
 
         if(hid.getSeat() != Seat.YOU){
@@ -468,8 +523,14 @@ public class GameClient extends AbstractGameFrame {
         this.splittable = hand.isPair() && !hid.getSplit();
     }
 
+    /**
+     * Tests if the hand is confirmed for advising.
+     * @param hid Hand id
+     * @param play Play to confirm
+     * @return True if the advice is confirmed -- this causes
+     */
     @Override
-    protected boolean confirmed(Hid hid, Play play) {
+    protected boolean isAdvisingConfirmed(Hid hid, Play play) {
 //        return false;
         if(!this.adviseCheckBox.isSelected() || advisor == null || dealerHand.size() < 2)
             return true;

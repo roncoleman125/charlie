@@ -75,13 +75,13 @@ public abstract class AbstractGameFrame extends javax.swing.JFrame {
 
     public abstract void updateHandIndex();
 
-    public abstract void setdubblable(boolean state);
+    public abstract void setDubblable(boolean state);
 
     public abstract void deal(Hid hid, Card card, int[] handValues);
 
     public abstract void enableSplitButton(Hid hid);
 
-    protected abstract boolean confirmed(Hid hid, Play play);
+    protected abstract boolean isAdvisingConfirmed(Hid hid, Play play);
 
     protected abstract void loadConfig();
 

@@ -25,7 +25,6 @@ package charlie.view;
 import charlie.AbstractGameFrame;
 import charlie.plugin.IUi;
 import charlie.view.sprite.TurnIndicator;
-import charlie.GameFrame;
 import charlie.actor.Courier;
 import charlie.audio.Effect;
 import charlie.audio.SoundFactory;
@@ -396,7 +395,7 @@ public final class ATable extends JPanel implements Runnable, IUi, MouseListener
             if(hid.getSplit()){
                 // update hand index
                 this.frame.updateHandIndex();
-                this.frame.setdubblable(true);
+                this.frame.setDubblable(true);
                 this.frame.enablePlay(true); // this needed? 
             }
 

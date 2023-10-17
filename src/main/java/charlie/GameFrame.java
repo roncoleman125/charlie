@@ -22,10 +22,7 @@
  */
 package charlie;
 
-import charlie.actor.ClientAuthenticator;
 import charlie.card.Hid;
-import charlie.actor.Courier;
-import charlie.actor.Arriver;
 import charlie.audio.Effect;
 import charlie.audio.SoundFactory;
 import charlie.card.Card;
@@ -33,15 +30,11 @@ import charlie.card.Hand;
 import charlie.dealer.Seat;
 import charlie.util.Play;
 import charlie.plugin.IAdvisor;
-import charlie.server.Ticket;
 import charlie.view.ATable;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Properties;
 import javax.imageio.ImageIO;
 import javax.swing.JCheckBox;
@@ -200,7 +193,7 @@ public class GameFrame extends AbstractGameFrame {
      * @return True if advising, false otherwise
      */
     @Override
-    protected boolean confirmed(Hid hid,Play play) {
+    protected boolean isAdvisingConfirmed(Hid hid, Play play) {
         if(!this.adviseCheckBox.isSelected() || advisor == null || dealerHand.size() < 2)
             return true;
 
@@ -575,7 +568,7 @@ public class GameFrame extends AbstractGameFrame {
         this.handIndex = 0;
 
         //this.dubblable = true;
-        this.setdubblable(true);
+        this.setDubblable(true);
         
         
         final GameFrame frame = this;
@@ -630,7 +623,7 @@ public class GameFrame extends AbstractGameFrame {
             public void run() {
                 Hid hid = hids.get(frame.handIndex);
 
-                if (!confirmed(hid, Play.STAY))
+                if (!isAdvisingConfirmed(hid, Play.STAY))
                     return;
                 
                 // Disable further play since this is a STAY
@@ -653,13 +646,13 @@ public class GameFrame extends AbstractGameFrame {
             public void run() {
                 Hid hid = hids.get(frame.handIndex);
                 
-                if(!confirmed(hid,Play.HIT))
+                if(!isAdvisingConfirmed(hid,Play.HIT))
                     return;
                 
                 // NOTE: this isables double down on all hids and will have to be
                 // fixed when splitting hids
                 //frame.dubblable = false;
-                frame.setdubblable(false);
+                frame.setDubblable(false);
 
                 // Disable play until the card arrives
                 enablePlay(false);
@@ -682,7 +675,7 @@ public class GameFrame extends AbstractGameFrame {
             public void run() {
                 Hid hid = hids.get(frame.handIndex);
 
-                if (!confirmed(hid, Play.DOUBLE_DOWN))
+                if (!isAdvisingConfirmed(hid, Play.DOUBLE_DOWN))
                     return;
 
                 SoundFactory.play(Effect.DOUBLE_DOWN);
@@ -692,7 +685,7 @@ public class GameFrame extends AbstractGameFrame {
 
                 // No further dubbling until the next bet made
                 //dubblable = false;
-                frame.setdubblable(false);
+                frame.setDubblable(false);
                 
                 // Double the bet in the myHand using a copy since this
                 // is a transient bet.
@@ -729,7 +722,7 @@ public class GameFrame extends AbstractGameFrame {
                 // get active hand
                 Hid hid = hids.get(frame.handIndex);
                 
-                if (!confirmed(hid, Play.SPLIT))
+                if (!isAdvisingConfirmed(hid, Play.SPLIT))
                     return;
                 
                 SoundFactory.play(Effect.SPLIT);
@@ -807,7 +800,7 @@ public class GameFrame extends AbstractGameFrame {
      * @param state - the state to make 'dubblable'
      */
     @Override
-    public void setdubblable(boolean state){
+    public void setDubblable(boolean state){
        this.dubblable = state;
     }
 
