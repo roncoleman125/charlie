@@ -51,12 +51,14 @@ import java.lang.reflect.InvocationTargetException;
  * @author Ron Coleman
  */
 public class GameFrame extends AbstractGameFrame {
-    protected static Logger LOG = null;
 
     /**
      * Constructor
      */
     public GameFrame() {
+        // Launch the logger which causes log4j.properties to be read.
+        LOG = Logger.getLogger(GameFrame.class);
+
         // Override default log file name in log4j.properties with name for this program.
         System.getProperties().setProperty("LOGFILE","log-client.out");
         

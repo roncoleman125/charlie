@@ -71,6 +71,9 @@ public class GameClient extends AbstractGameFrame {
      * Constructor
      */
     public GameClient() {
+        // Launch the logger which causes log4j.properties to be read.
+        LOG = Logger.getLogger(GameClient.class);
+
         // Override default log file name in log4j.properties with the log file for this program.
         System.getProperties().setProperty("LOGFILE","log-client.out");
 
@@ -90,9 +93,6 @@ public class GameClient extends AbstractGameFrame {
         // Makes the frame appear (typically) in the middle of the desktop
         setLocationRelativeTo(null);
         setVisible(true);
-
-        // Launch the logger which causes log4j.properties to be read.
-        LOG = Logger.getLogger(GameClient.class);
 
         // Logging can now start in earnest
         LOG.info("client started");
