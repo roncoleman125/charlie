@@ -591,7 +591,7 @@ public class Dealer implements Serializable {
             
             // Is this hand created from a "split" AND about to be new turn?
             // If so, we need to "HIT" the hand with its first card.
-            if(hid.getSplit() && hand.size() == 1){
+            if(hid.isSplit() && hand.size() == 1){
                 // Need to add a delay or it comes out too fast.
                 try{
                     Thread.sleep(DEAL_DELAY);

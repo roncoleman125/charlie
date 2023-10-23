@@ -27,7 +27,6 @@ import charlie.util.Constant;
 import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Objects;
 import java.util.Random;
 import org.apache.log4j.Logger;
 
@@ -42,7 +41,7 @@ public class Hid implements Serializable {
     private final static Logger LOG = Logger.getLogger(Hid.class);
     private static Random ran = new Random();
     private static String host = "UNKNOWN";
-    private Long key = Math.abs(ran.nextLong());
+    private long key = Math.abs(ran.nextLong());
     private Seat seat = Seat.YOU;
     protected double amt = 0.0;
     protected double sideAmt = 0.0;
@@ -169,7 +168,7 @@ public class Hid implements Serializable {
      * Gets the split notification, if hand was created due to a split
      * @return boolean true if hand was created due to a split
      */
-    public boolean getSplit(){
+    public boolean isSplit(){
         return this.split;
     }
     
@@ -213,6 +212,7 @@ public class Hid implements Serializable {
             return false;
         }
         final Hid other = (Hid) obj;
-        return Objects.equals(this.key, other.key);
+//        return Objects.equals(this.key, other.key);
+        return this.key == other.key;
     }
 }

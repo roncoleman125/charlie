@@ -752,7 +752,7 @@ public class GameFrame extends AbstractGameFrame {
         Hand hand = hands.get(hid);
 
         // If the hand is a pair && it hasn't been part of a split
-        this.splittable = hand.isPair() && !hid.getSplit();
+        this.splittable = hand.isPair() && !hid.isSplit();
     }
 
     /**

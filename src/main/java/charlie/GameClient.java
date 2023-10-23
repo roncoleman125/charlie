@@ -298,7 +298,7 @@ public class GameClient extends AbstractGameFrame {
                         if(!isAdvisingConfirmed(hid,Play.HIT))
                             return;
 
-                        // NOTE: this isables double down on all hids and will have to be
+                        // NOTE: this enables double down on all hids and will have to be
                         // fixed when splitting hids
                         //frame.dubblable = false;
                         setDubblable(false);
@@ -520,7 +520,7 @@ public class GameClient extends AbstractGameFrame {
         Hand hand = hands.get(hid);
 
         // If the hand is a pair && it hasn't been part of a split
-        this.splittable = hand.isPair() && !hid.getSplit();
+        this.splittable = hand.isPair() && !hid.isSplit();
     }
 
     /**

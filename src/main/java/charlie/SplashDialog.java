@@ -124,7 +124,7 @@ public class SplashDialog extends javax.swing.JDialog {
                         try {
                             Thread.sleep(7000);
 
-                            new GameFrame().setVisible(true);
+                            new GameClient().setVisible(true);
                             
                             dialog.dispose();                             
                         } catch (InterruptedException ex) {

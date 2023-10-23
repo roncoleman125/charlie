@@ -392,7 +392,7 @@ public final class ATable extends JPanel implements Runnable, IUi, MouseListener
             boolean enable = true;
             
             // ONLY update player hand
-            if(hid.getSplit()){
+            if(hid.isSplit()){
                 // update hand index
                 this.frame.updateHandIndex();
                 this.frame.setDubblable(true);

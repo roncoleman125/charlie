@@ -144,7 +144,7 @@ public class AMoneyManager {
         // to left most hand, however, the right most hand is
         // the one with the "I am the split hand" variable set
         // something to consider fixing or changing if time allows
-        if(!this.splitChips.isEmpty() && !hid.getSplit()){
+        if(!this.splitChips.isEmpty() && !hid.isSplit()){
             sz = splitChips.size();
             x = splitChips.get(sz-1).getX();
             y = splitChips.get(sz-1).getY() + ran.nextInt(5)-5;

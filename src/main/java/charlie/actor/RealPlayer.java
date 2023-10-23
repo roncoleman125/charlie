@@ -126,23 +126,23 @@ public class RealPlayer extends Actor implements Listener, IPlayer {
      */
     public void onReceive(Request request) {
         info("received request = "+request.getClass().getSimpleName());
-        Hid hand = request.getHid();
+        Hid hid = request.getHid();
         
         if(request instanceof Hit)
-            dealer.hit(this, hand);
+            dealer.hit(this, hid);
         
         else if(request instanceof Stay)
-            dealer.stay(this, hand);
+            dealer.stay(this, hid);
         
         else if(request instanceof DoubleDown)
-            dealer.doubleDown(this, hand);
+            dealer.doubleDown(this, hid);
         
         else if(request instanceof SplitRequest){
-            dealer.split(this, hand);
+            dealer.split(this, hid);
         }
         
         else
-            error("received unknown request: "+request+" for hand = "+hand);
+            error("received unknown request: "+request+" for hand = "+hid);
     } 
 
     /**
