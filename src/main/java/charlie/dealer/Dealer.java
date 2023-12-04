@@ -22,8 +22,7 @@
  */
 package charlie.dealer;
 
-import charlie.plugin.IPlayer;
-import charlie.plugin.IBot;
+import charlie.plugin.*;
 import charlie.card.Hand;
 import charlie.actor.House;
 import charlie.actor.RealPlayer;
@@ -31,8 +30,6 @@ import charlie.card.Card;
 import charlie.card.HoleCard;
 import charlie.card.Hid;
 import charlie.card.ShoeFactory;
-import charlie.plugin.IShoe;
-import charlie.plugin.ISideBetRule;
 import charlie.util.Constant;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -53,7 +50,7 @@ import org.apache.log4j.Logger;
  * </ol>
  * @author Ron Coleman
  */
-public class Dealer implements Serializable { 
+public class Dealer implements Serializable {
     private final Logger LOG = Logger.getLogger(Dealer.class);  
     protected final static Double BLACKJACK_PAYS = 3/2.;
     protected final static Double CHARLIE_PAYS = 2/1.;
@@ -66,7 +63,7 @@ public class Dealer implements Serializable {
     protected List<Hid> handSequence = new ArrayList<>();
     protected List<IPlayer> playerSequence = new ArrayList<>();
     protected final House house;
-    protected Integer handSeqIndex = 0;
+    protected Integer nextHandIndex = 0;
     protected IPlayer active = null;
     protected ISideBetRule sideRule = null;
     protected Hand dealerHand;
@@ -75,7 +72,7 @@ public class Dealer implements Serializable {
     protected boolean shufflePending = false;
     
     // To "delay" deal so cards do not come out too fast
-    private final int DEAL_DELAY = 1000;
+    protected final int DEAL_DELAY = 1000;
     
     /**
      * Constructor
@@ -123,7 +120,7 @@ public class Dealer implements Serializable {
         spawnBot("dewey",Seat.LEFT);
       
         // We'll start with this sequence number when playing hands
-        handSeqIndex = 0;        
+        nextHandIndex = 0;
 
         // Create the dealer hand
         dealerHand = new Hand(new Hid(Seat.DEALER));
@@ -385,7 +382,7 @@ public class Dealer implements Serializable {
      * @param iplayer Player requesting a hit.
      * @param hid Player's hand id
      */
-    public void hit(IPlayer iplayer,Hid hid) {
+    public void hit(IPlayer iplayer, Hid hid) {
         // Validate the request
         Hand hand = validate(hid);
         if(hand == null) {
@@ -396,14 +393,15 @@ public class Dealer implements Serializable {
         // Deal a card
         Card card = deal();
         hand.hit(card);
-        
+
+        LOG.info("hit hid = " + hid + " with " + card);
+
         // All players MUST test for charlie. Otherwise they will
         // not know they have this hand and may try to hit if hand<21.
         for (IPlayer player : playerSequence) {
             player.deal(hid, card, hand.getValues());
         }
-        
-        LOG.info("hit hid = " + hid + " with " + card);
+
 
         // If the hand isBroke, we're done with this hand
         if(hand.isBroke()) {
@@ -412,7 +410,8 @@ public class Dealer implements Serializable {
             // Tell everyone what happened
             for (IPlayer _player : playerSequence)
                 _player.bust(hid);
-            
+
+            LOG.info("going to next hand");
             goNextHand();
         }
         // If hand got a Charlie or Blackjack, we're done with this hand
@@ -459,6 +458,7 @@ public class Dealer implements Serializable {
         LOG.info("got STAY for "+hid);
         
         // Since player stayed, we're done with hand
+        LOG.info("going to next hand");
         goNextHand();
     }
     
@@ -466,8 +466,10 @@ public class Dealer implements Serializable {
      * Double down player hand upon request only AFTER the initial rounds. 
      * @param iplayer Player requesting a hit.
      * @param hid Player's hand id
-     */    
+     */
     public void doubleDown(IPlayer iplayer, Hid hid) {
+        LOG.info("got double-down request");
+
         // Validate the request
         Hand hand = validate(hid);
         
@@ -478,14 +480,13 @@ public class Dealer implements Serializable {
 
         if(hand.size() != 2)
             throw new UnsupportedOperationException("invalid hand size = "+hand.size());
-        
-        LOG.info("got double down amt = "+hid.getAmt()+" hid = "+hid);
-        
+
         // Dealer must double bet since one in hid is a copy -- not dealers
         hand.dubble();
        
         Card card = deal();
-        
+        LOG.info("got double down amt = "+hid.getAmt()+" hid = "+hid+" card = "+card);
+
         // Double the bet and hit the hand once
         hand.hit(card);
         
@@ -502,6 +503,7 @@ public class Dealer implements Serializable {
         }
         
         // Go to next hand regardless on a double down
+        LOG.info("going to next hand");
         goNextHand();
     }
     
@@ -555,7 +557,7 @@ public class Dealer implements Serializable {
         
         hands.put(newHid, newHand);
         
-        // Send back to the ATable what has just occured.
+        // Send back to the ATable what has just occurred.
         player.split(newHid, hid);
                 
         // Need to hit one of the hands, might as well make it the 
@@ -567,14 +569,14 @@ public class Dealer implements Serializable {
      * Moves to the next hand at the table
      */
     protected void goNextHand() {
-        LOG.info("going to next hand");
-        
+        LOG.info("hand sequence index = "+ nextHandIndex +" hand sequence size = "+handSequence.size());
+
         // Get next hand and inform player
-        if (handSeqIndex < handSequence.size()) {
+        if (nextHandIndex < handSequence.size()) {
             // Did we "hit" a split hand this time
             boolean firstSplitHit = false;
             
-            Hid hid = handSequence.get(handSeqIndex++);
+            Hid hid = handSequence.get(nextHandIndex++);
 
             active = players.get(hid);
             LOG.info("active player = " + active);

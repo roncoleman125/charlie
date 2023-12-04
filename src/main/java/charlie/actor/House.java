@@ -31,10 +31,15 @@ import charlie.plugin.IPlayer;
 import charlie.message.view.from.Arrival;
 import charlie.server.GameServer;
 import charlie.server.Ticket;
+
+import java.lang.reflect.Constructor;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+
+import charlie.util.Constant;
 import org.apache.log4j.Logger;
 
 /**
@@ -110,9 +115,10 @@ public class House extends Actor implements Listener {
         // Note: if we were allocating dealers from a pool, this is the place
         // to implement that logic. For now we'll just spawn dealers without
         // restriction.
-        Dealer dealer = new Dealer(this);
+//        Dealer dealer = new Dealer(this);
+        Dealer dealer = loadDealer();
 
-        // Spawn a "real player" in server       
+        // Spawn a "real player" sandwiched between dealer and courier.
         RealPlayer player = new RealPlayer(dealer, courier);
         player.setListener(player);
         
@@ -129,6 +135,43 @@ public class House extends Actor implements Listener {
 
         // Inform courier that login is complete and we're ready to play
         player.ready();
+    }
+
+    /**
+     * Loads a dealer.
+     * @return Class of dealer type.
+     */
+    protected Dealer loadDealer() {
+        String className = System.getProperty(Constant.PLUGIN_DEALER);
+        if(className == null) {
+            LOG.info("no dealer plugin configured using default: "+Dealer.class.getName());
+            return new Dealer(this);
+        }
+
+        try {
+            // Should be a Dealer-type class...
+            Class clazz = Class.forName(className);
+
+            // Dealer constructor must have this signature...
+            Class<?>[] parameterTypes = {House.class};
+
+            Constructor<?>[] constructors = clazz.getConstructors();
+
+            // Inspect the configured dealer for the constructor
+            for(Constructor<?> constructor: constructors) {
+                if(Arrays.equals(parameterTypes,constructor.getParameterTypes())) {
+                    Dealer dealer = (Dealer) constructor.newInstance(this);
+                    LOG.info("loaded dealer plugin: "+className);
+                    return dealer;
+                }
+            }
+        }
+        catch(Exception e) {
+            LOG.error("failed to load dealer plugin "+className+": "+e);
+            e.printStackTrace();
+        }
+
+        return null;
     }
     
     /**

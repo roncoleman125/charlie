@@ -34,7 +34,6 @@ charlie\view\ABankroll.class
 charlie\card\Card$Suit.class
 charlie\message\view\to\Blackjack.class
 charlie\audio\SoundFactory$1.class
-charlie\GameFrame2.class
 charlie\SplashDialog$1$2.class
 charlie\message\view\from\Login.class
 charlie\plugin\ILogan.class
