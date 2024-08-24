@@ -26,6 +26,7 @@
               <component id="8c869" class="javax.swing.JCheckBox" binding="adviseCheckBox" default-binding="true">
                 <constraints/>
                 <properties>
+                  <enabled value="false"/>
                   <text value="Advise"/>
                 </properties>
               </component>

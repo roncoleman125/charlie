@@ -71,11 +71,11 @@ public class GameClient extends AbstractGameFrame {
      * Constructor
      */
     public GameClient() {
-        // Launch the logger which causes log4j.properties to be read.
-        LOG = Logger.getLogger(GameClient.class);
-
         // Override default log file name in log4j.properties with the log file for this program.
         System.getProperties().setProperty("LOGFILE","log-client.out");
+
+        // Launch the logger which causes log4j.properties to be read.
+        LOG = Logger.getLogger(GameClient.class);
 
         // Topmost is where the GUI builder begins...but loading of the form is unclear.
         setContentPane(topmostPanel);
